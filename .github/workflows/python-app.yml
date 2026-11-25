@@ -2,9 +2,9 @@ name: Python application
 
 on:
   push:
-    branches: [ "homo" ]
+    branches: [ "prod" ]
   pull_request:
-    branches: [ "homo" ]
+    branches: [ "prod" ]
 
 permissions:
   contents: read
@@ -44,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v7.4.0
         with:
           push: true
-          tags: matheusraiano/api_homo:latest
+          tags: matheusraiano/api_prod:latest
           
   Deploy:
     needs: Image
@@ -53,12 +53,12 @@ jobs:
       - name: Deploy na EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 100.29.50.115
+          host: 100.30.39.87
           username: ubuntu
-          key: ${{secrets.CHAVE_HOMO}}
+          key: ${{secrets.CHAVE_PROD}}
           script: |
             echo "Acesso liberado!"
-            sudo docker pull matheusraiano/api_homo:latest
-            sudo docker stop api_homo 2>/dev/null || true
-            sudo docker rm api_homo 2>/dev/null || true
-            sudo docker run --name api_homo -d -p 80:80 matheusraiano/api_homo:latest
+            sudo docker pull matheusraiano/api_prod:latest
+            sudo docker stop api_prod 2>/dev/null || true
+            sudo docker rm api_prod 2>/dev/null || true
+            sudo docker run --name api_prod -d -p 80:80 matheusraiano/api_prod:latest
