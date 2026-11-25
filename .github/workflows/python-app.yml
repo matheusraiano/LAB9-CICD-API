@@ -2,16 +2,18 @@ name: Python application
 
 on:
   push:
-    branches: [ "homo" ]
+    branches: [ "homolocao" ]
   pull_request:
-    branches: [ "homo" ]
+    branches: [ "homolocao" ]
 
 permissions:
   contents: read
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
@@ -33,11 +35,14 @@ jobs:
       run: |
         pytest
 
-  Imagem:
+
+  Image:
     needs: build
     runs-on: ubuntu-latest
+
+
     steps:
-      - name: Docker login
+      - name: Docker Login
         uses: docker/login-action@v4.8.0
         with:
           username: ${{secrets.DOCKER_USER}}
@@ -48,3 +53,5 @@ jobs:
         with:
           push: true
           tags: matheusraiano/api_homo:latest
+            
+      
