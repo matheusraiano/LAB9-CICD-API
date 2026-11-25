@@ -11,9 +11,7 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
@@ -32,12 +30,9 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-
   Image:
     needs: build
     runs-on: ubuntu-latest
-
-
     steps:
       - name: Docker Login
         uses: docker/login-action@v4.8.0
@@ -50,5 +45,20 @@ jobs:
         with:
           push: true
           tags: matheusraiano/api_homo:latest
-            
-      
+          
+  Deploy:
+    needs: Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy na EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 100.29.50.115
+          username: ubuntu
+          key: ${{secrets.CHAVE_HOMO}}
+          script: |
+            echo "Acesso liberado!"
+            sudo docker pull matheusraiano/api_homo:latest
+            sudo docker stop api_homo 2>/dev/null || true
+            sudo docker rm api_homo 2>/dev/null || true
+            sudo docker run --name api_homo -d -p 80:80 matheusraiano/api_homo:latest
