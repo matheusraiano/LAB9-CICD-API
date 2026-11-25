@@ -2,9 +2,9 @@ name: Python application
 
 on:
   push:
-    branches: [ "homolocao" ]
+    branches: [ "homo" ]
   pull_request:
-    branches: [ "homolocao" ]
+    branches: [ "homo" ]
 
 permissions:
   contents: read
